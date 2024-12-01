@@ -7,7 +7,7 @@ edition = "2021"
 rust-version = "1.83"
 
 [workspace.dependencies]
-anyhow = { version = "1.0.80" }
+rustc-hash = { version = "2.0.0" }
 
 [workspace.lints.rust]
 unreachable_pub = "warn"

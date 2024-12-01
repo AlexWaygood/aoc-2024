@@ -1,0 +1,11 @@
+[package]
+name = "day-1b"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+rustc-hash = { workspace = true }
+
+[lints]
+workspace = true
