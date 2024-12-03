@@ -9,6 +9,7 @@ rust-version = "1.83"
 [workspace.dependencies]
 rustc-hash = "2.0.0"
 itertools = "*"
+regex = "*"
 test-case = "*"
 
 [workspace.lints.rust]

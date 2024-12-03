@@ -1,0 +1,11 @@
+[package]
+name = "day-3b"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+regex = { workspace = true }
+
+[lints]
+workspace = true
