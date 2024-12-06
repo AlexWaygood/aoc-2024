@@ -12,6 +12,7 @@ itertools = "*"
 regex = "*"
 test-case = "*"
 anyhow = "*"
+indexmap = "*"
 
 [workspace.lints.rust]
 unreachable_pub = "warn"
