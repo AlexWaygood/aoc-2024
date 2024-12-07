@@ -68,7 +68,6 @@ name = "day-4a"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "rustc-hash",
  "utilities",
 ]
 
@@ -77,7 +76,6 @@ name = "day-4b"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "rustc-hash",
  "utilities",
 ]
 
@@ -266,4 +264,5 @@ name = "utilities"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "rustc-hash",
 ]

@@ -1,8 +1,8 @@
 use std::str::FromStr;
 
 use anyhow::{bail, Context};
-use rustc_hash::{FxHashMap, FxHashSet};
-use utilities::maps::{FourPointCompass, Point};
+use rustc_hash::FxHashSet;
+use utilities::maps::{FourPointCompass, Point, Grid};
 
 fn main() {
     let input = include_str!(concat!(
@@ -71,8 +71,9 @@ impl FromStr for PuzzleInput {
     }
 }
 
-type LabMap = FxHashMap<LabPoint, PointContents>;
-type LabPoint = Point<130>;
+const MAX_COORDINATE: u16 = 130;
+type LabPoint = Point<MAX_COORDINATE>;
+type LabMap = Grid<MAX_COORDINATE, PointContents>;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum PointContents {

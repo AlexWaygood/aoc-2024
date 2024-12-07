@@ -1,6 +1,36 @@
-use std::num::NonZeroU16;
+use std::{
+    num::NonZeroU16,
+    ops::{Deref, DerefMut},
+};
 
 use anyhow::anyhow;
+use rustc_hash::{FxBuildHasher, FxHashMap};
+
+#[derive(Debug)]
+pub struct Grid<const MAX_COORDINATE: u16, T>(FxHashMap<Point<MAX_COORDINATE>, T>);
+
+impl<const MAX_COORDINATE: u16, T> Default for Grid<MAX_COORDINATE, T> {
+    fn default() -> Self {
+        Self(FxHashMap::with_capacity_and_hasher(
+            usize::from(MAX_COORDINATE).pow(2),
+            FxBuildHasher,
+        ))
+    }
+}
+
+impl<const MAX_COORDINATE: u16, T> Deref for Grid<MAX_COORDINATE, T> {
+    type Target = FxHashMap<Point<MAX_COORDINATE>, T>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl<const MAX_COORDINATE: u16, T> DerefMut for Grid<MAX_COORDINATE, T> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
+    }
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Coordinate<const MAX_COORDINATE: u16>(NonZeroU16);

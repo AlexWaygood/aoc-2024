@@ -5,7 +5,6 @@ edition.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-rustc-hash = { workspace = true }
 anyhow = { workspace = true }
 utilities = { workspace = true }
 

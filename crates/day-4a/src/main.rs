@@ -1,8 +1,7 @@
 use anyhow::anyhow;
-use rustc_hash::FxHashMap;
 use std::str::FromStr;
 
-use utilities::maps::{EightPointCompass, Point, ALL_EIGHT_DIRECTIONS};
+use utilities::maps::{EightPointCompass, Grid, Point, ALL_EIGHT_DIRECTIONS};
 
 fn main() {
     let input = include_str!(concat!(
@@ -15,10 +14,11 @@ fn main() {
     println!("{answer}");
 }
 
-type WordsearchPoint = Point<140>;
+const MAX_COORDINATE: u16 = 140;
+type WordsearchPoint = Point<MAX_COORDINATE>;
 
 #[derive(Debug)]
-struct Wordsearch(FxHashMap<WordsearchPoint, Letter>);
+struct Wordsearch(Grid<MAX_COORDINATE, Letter>);
 
 impl Wordsearch {
     fn total_christmases(&self) -> usize {
@@ -64,7 +64,7 @@ impl FromStr for Wordsearch {
     type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let mut grid = FxHashMap::default();
+        let mut grid = Grid::default();
         for (zero_indexed_y, line) in s.lines().enumerate() {
             for (zero_indexed_x, c) in line.char_indices() {
                 grid.insert(
