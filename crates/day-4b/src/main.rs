@@ -1,7 +1,8 @@
 use anyhow::anyhow;
 use rustc_hash::FxHashMap;
-use std::num::NonZeroU16;
 use std::str::FromStr;
+
+use utilities::maps::{EightPointCompass, Point};
 
 fn main() {
     let input = include_str!(concat!(
@@ -14,10 +15,10 @@ fn main() {
     println!("{answer}");
 }
 
-const MAX_COORDINATE: NonZeroU16 = NonZeroU16::new(140).unwrap();
+type WordsearchPoint = Point<140>;
 
 #[derive(Debug)]
-struct Wordsearch(FxHashMap<Point, Letter>);
+struct Wordsearch(FxHashMap<WordsearchPoint, Letter>);
 
 impl Wordsearch {
     fn total_christmases(&self) -> usize {
@@ -27,25 +28,25 @@ impl Wordsearch {
             .count()
     }
 
-    fn letter_at(&self, point: Point) -> Letter {
+    fn letter_at(&self, point: WordsearchPoint) -> Letter {
         self.0[&point]
     }
 
-    fn contains_x_mas(&self, point: Point, letter: Letter) -> bool {
+    fn contains_x_mas(&self, point: WordsearchPoint, letter: Letter) -> bool {
         if !letter.is_a() {
             return false;
         }
 
-        let Some(north_west) = point.shift(Direction::NorthWest) else {
+        let Some(north_west) = point.shift(EightPointCompass::NorthWest) else {
             return false;
         };
-        let Some(south_east) = point.shift(Direction::SouthEast) else {
+        let Some(south_east) = point.shift(EightPointCompass::SouthEast) else {
             return false;
         };
-        let Some(north_east) = point.shift(Direction::NorthEast) else {
+        let Some(north_east) = point.shift(EightPointCompass::NorthEast) else {
             return false;
         };
-        let Some(south_west) = point.shift(Direction::SouthWest) else {
+        let Some(south_west) = point.shift(EightPointCompass::SouthWest) else {
             return false;
         };
 
@@ -74,91 +75,6 @@ impl FromStr for Wordsearch {
         }
         Ok(Self(grid))
     }
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-struct Coordinate(NonZeroU16);
-
-impl Coordinate {
-    fn new(val: u16) -> Option<Self> {
-        let candidate = NonZeroU16::new(val)?;
-        (candidate <= MAX_COORDINATE).then_some(Self(candidate))
-    }
-
-    fn checked_add(self, other: u16) -> Option<Self> {
-        self.0.get().checked_add(other).and_then(Self::new)
-    }
-
-    fn checked_sub(self, other: u16) -> Option<Self> {
-        self.0.get().checked_sub(other).and_then(Self::new)
-    }
-}
-
-impl TryFrom<usize> for Coordinate {
-    type Error = anyhow::Error;
-
-    fn try_from(value: usize) -> Result<Self, Self::Error> {
-        let candidate = u16::try_from(value)?;
-        Self::new(candidate).map_or_else(
-            || Err(anyhow!("Expected a value >=1 and <= {MAX_COORDINATE}")),
-            Ok,
-        )
-    }
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-struct Point {
-    x: Coordinate,
-    y: Coordinate,
-}
-
-impl Point {
-    fn shift(self, direction: Direction) -> Option<Self> {
-        let Point { x, y } = self;
-
-        match direction {
-            Direction::North => y.checked_sub(1).map(|y| Point { x, y }),
-            Direction::East => x.checked_add(1).map(|x| Point { x, y }),
-            Direction::South => y.checked_add(1).map(|y| Point { x, y }),
-            Direction::West => x.checked_sub(1).map(|x| Point { x, y }),
-            Direction::NorthEast => self
-                .shift(Direction::North)
-                .and_then(|point| point.shift(Direction::East)),
-            Direction::SouthEast => self
-                .shift(Direction::South)
-                .and_then(|point| point.shift(Direction::East)),
-            Direction::SouthWest => self
-                .shift(Direction::South)
-                .and_then(|point| point.shift(Direction::West)),
-            Direction::NorthWest => self
-                .shift(Direction::North)
-                .and_then(|point| point.shift(Direction::West)),
-        }
-    }
-}
-
-impl TryFrom<(usize, usize)> for Point {
-    type Error = anyhow::Error;
-
-    fn try_from(value: (usize, usize)) -> Result<Self, Self::Error> {
-        let (x, y) = value;
-        Ok(Self {
-            x: Coordinate::try_from(x)?,
-            y: Coordinate::try_from(y)?,
-        })
-    }
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum Direction {
-    North,
-    East,
-    South,
-    West,
-    NorthEast,
-    SouthEast,
-    SouthWest,
-    NorthWest,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

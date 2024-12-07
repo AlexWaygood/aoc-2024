@@ -13,6 +13,7 @@ regex = "*"
 test-case = "*"
 anyhow = "*"
 indexmap = "*"
+utilities = { path = "crates/utilities" }
 
 [workspace.lints.rust]
 unreachable_pub = "warn"

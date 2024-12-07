@@ -1,13 +1,11 @@
 [package]
-name = "day-4b"
+name = "utilities"
 version = "0.1.0"
 edition.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-rustc-hash = { workspace = true }
 anyhow = { workspace = true }
-utilities = { workspace = true }
 
 [lints]
 workspace = true
