@@ -123,6 +123,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "day-8a"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "itertools",
+ "rustc-hash",
+ "smallvec",
+ "utilities",
+]
+
+[[package]]
 name = "either"
 version = "1.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -217,6 +228,12 @@ name = "rustc-hash"
 version = "2.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c7fb8039b3032c191086b10f11f319a6e99e1e82889c5cc6046f515c9db1d497"
+
+[[package]]
+name = "smallvec"
+version = "1.13.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3c5e1a9a646d36c3599cd173a41282daf47c44583ad367b8e6837255952e5c67"
 
 [[package]]
 name = "syn"

@@ -1,0 +1,15 @@
+[package]
+name = "day-8a"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+anyhow = { workspace = true }
+itertools = { workspace = true }
+rustc-hash = { workspace = true }
+utilities = { workspace = true }
+smallvec = { workspace = true }
+
+[lints]
+workspace = true

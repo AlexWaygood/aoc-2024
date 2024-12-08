@@ -3,7 +3,7 @@ use std::{
     ops::{Deref, DerefMut},
 };
 
-use anyhow::anyhow;
+use anyhow::{anyhow, Context};
 use rustc_hash::{FxBuildHasher, FxHashMap};
 
 #[derive(Debug)]
@@ -54,6 +54,19 @@ impl<const MAX_COORDINATE: u16> Coordinate<MAX_COORDINATE> {
 
     fn checked_sub(self, other: u16) -> Option<Self> {
         self.get().checked_sub(other).and_then(Self::new)
+    }
+
+    fn difference_from(self, other: Coordinate<MAX_COORDINATE>) -> anyhow::Result<i32> {
+        i32::from(self.get())
+            .checked_sub_unsigned(u32::from(other.get()))
+            .context("Expected values to fit into an i32")
+    }
+
+    fn try_apply_delta(self, delta: i32) -> Option<Self> {
+        u32::from(self.get())
+            .checked_add_signed(delta)
+            .and_then(|x| u16::try_from(x).ok())
+            .and_then(Self::new)
     }
 }
 
@@ -106,6 +119,16 @@ impl<const MAX_COORDINATE: u16> Point<MAX_COORDINATE> {
         }
         Some(point)
     }
+
+    pub fn apply_delta(self, delta: Delta) -> Option<Self> {
+        let Delta { x_delta, y_delta } = delta;
+        let Point { x, y } = self;
+
+        Some(Point {
+            x: x.try_apply_delta(x_delta)?,
+            y: y.try_apply_delta(y_delta)?,
+        })
+    }
 }
 
 impl<const MAX_COORDINATE: u16> TryFrom<(usize, usize)> for Point<MAX_COORDINATE> {
@@ -116,6 +139,38 @@ impl<const MAX_COORDINATE: u16> TryFrom<(usize, usize)> for Point<MAX_COORDINATE
         Ok(Self {
             x: Coordinate::try_from(x)?,
             y: Coordinate::try_from(y)?,
+        })
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Delta {
+    x_delta: i32,
+    y_delta: i32,
+}
+
+impl Delta {
+    #[must_use]
+    pub fn reversed(self) -> Delta {
+        let Delta { x_delta, y_delta } = self;
+        Delta {
+            x_delta: -x_delta,
+            y_delta: -y_delta,
+        }
+    }
+}
+
+impl<const MAX_COORDINATE: u16> TryFrom<(Point<MAX_COORDINATE>, Point<MAX_COORDINATE>)> for Delta {
+    type Error = anyhow::Error;
+
+    fn try_from(
+        value: (Point<MAX_COORDINATE>, Point<MAX_COORDINATE>),
+    ) -> Result<Self, Self::Error> {
+        let (point_a, point_b) = value;
+
+        Ok(Delta {
+            x_delta: point_a.x.difference_from(point_b.x)?,
+            y_delta: point_a.y.difference_from(point_b.y)?,
         })
     }
 }
