@@ -89,6 +89,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "day-5b"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "indexmap",
+ "rustc-hash",
+]
+
+[[package]]
 name = "day-6a"
 version = "0.1.0"
 dependencies = [
