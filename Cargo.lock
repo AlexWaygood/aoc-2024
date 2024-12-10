@@ -33,6 +33,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "day-10b"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "rustc-hash",
+ "utilities",
+]
+
+[[package]]
 name = "day-1a"
 version = "0.1.0"
 
