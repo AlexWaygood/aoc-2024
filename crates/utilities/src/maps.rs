@@ -217,7 +217,7 @@ impl From<FourPointCompass> for EightPointCompass {
     }
 }
 
-pub const ALL_EIGHT_DIRECTIONS: &[EightPointCompass] = &[
+pub const ALL_EIGHT_COMPASS_DIRECTIONS: &[EightPointCompass] = &[
     EightPointCompass::North,
     EightPointCompass::East,
     EightPointCompass::South,
@@ -226,4 +226,11 @@ pub const ALL_EIGHT_DIRECTIONS: &[EightPointCompass] = &[
     EightPointCompass::SouthEast,
     EightPointCompass::SouthWest,
     EightPointCompass::NorthWest,
+];
+
+pub const ALL_FOUR_COMPASS_DIRECTIONS: &[FourPointCompass] = &[
+    FourPointCompass::North,
+    FourPointCompass::East,
+    FourPointCompass::South,
+    FourPointCompass::West,
 ];

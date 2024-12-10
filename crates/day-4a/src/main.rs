@@ -1,7 +1,7 @@
 use anyhow::anyhow;
 use std::str::FromStr;
 
-use utilities::maps::{EightPointCompass, Grid, Point, ALL_EIGHT_DIRECTIONS};
+use utilities::maps::{EightPointCompass, Grid, Point, ALL_EIGHT_COMPASS_DIRECTIONS};
 
 fn main() {
     let input = include_str!(concat!(
@@ -32,7 +32,7 @@ impl Wordsearch {
         if !letter.is_x() {
             return 0;
         }
-        ALL_EIGHT_DIRECTIONS
+        ALL_EIGHT_COMPASS_DIRECTIONS
             .iter()
             .filter(|direction| self.contains_directional_christmas(point, **direction))
             .count()
