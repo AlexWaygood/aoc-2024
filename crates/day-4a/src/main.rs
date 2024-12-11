@@ -64,16 +64,7 @@ impl FromStr for Wordsearch {
     type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let mut grid = Grid::default();
-        for (zero_indexed_y, line) in s.lines().enumerate() {
-            for (zero_indexed_x, c) in line.char_indices() {
-                grid.insert(
-                    Point::try_from((zero_indexed_x + 1, zero_indexed_y + 1))?,
-                    Letter::try_from(c)?,
-                );
-            }
-        }
-        Ok(Self(grid))
+        Grid::from_str(s).map(Self)
     }
 }
 

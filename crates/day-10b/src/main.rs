@@ -1,4 +1,4 @@
-use std::str::FromStr;
+use std::{ops::Add, str::FromStr};
 
 use anyhow::Context;
 use utilities::maps::{self, Grid, ALL_FOUR_COMPASS_DIRECTIONS};
@@ -15,7 +15,34 @@ fn main() {
 
 const MAX_COORDINATE: u16 = 52;
 type Point = maps::Point<MAX_COORDINATE>;
-type Height = u8;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+struct Height(u8);
+
+impl PartialEq<u8> for Height {
+    fn eq(&self, other: &u8) -> bool {
+        &self.0 == other
+    }
+}
+
+impl Add<u8> for Height {
+    type Output = Height;
+
+    fn add(self, rhs: u8) -> Self::Output {
+        Height(self.0 + rhs)
+    }
+}
+
+impl TryFrom<char> for Height {
+    type Error = anyhow::Error;
+
+    fn try_from(value: char) -> Result<Self, Self::Error> {
+        let u32_value = value
+            .to_digit(10)
+            .context("Expected all points on the map to be digit characters")?;
+        Ok(Height(u8::try_from(u32_value)?))
+    }
+}
 
 #[derive(Debug)]
 struct LavaMap(Grid<MAX_COORDINATE, Height>);
@@ -58,17 +85,6 @@ impl FromStr for LavaMap {
     type Err = anyhow::Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let mut grid = Grid::default();
-        for (zero_based_y, line) in s.lines().enumerate() {
-            for (zero_based_x, c) in line.char_indices() {
-                let point = Point::try_from((zero_based_x + 1, zero_based_y + 1))?;
-                let height = Height::try_from(
-                    c.to_digit(10)
-                        .context("Expected all points on the map to be digit characters")?,
-                )?;
-                grid.insert(point, height);
-            }
-        }
-        Ok(Self(grid))
+        Grid::from_str(s).map(Self)
     }
 }

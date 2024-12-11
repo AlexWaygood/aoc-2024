@@ -1,6 +1,7 @@
 use std::{
     num::NonZeroU16,
     ops::{Deref, DerefMut},
+    str::FromStr,
 };
 
 use anyhow::{anyhow, Context};
@@ -29,6 +30,24 @@ impl<const MAX_COORDINATE: u16, T> Deref for Grid<MAX_COORDINATE, T> {
 impl<const MAX_COORDINATE: u16, T> DerefMut for Grid<MAX_COORDINATE, T> {
     fn deref_mut(&mut self) -> &mut Self::Target {
         &mut self.0
+    }
+}
+
+impl<const MAX_COORDINATE: u16, T> FromStr for Grid<MAX_COORDINATE, T>
+where
+    T: TryFrom<char, Error = anyhow::Error>,
+{
+    type Err = anyhow::Error;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let mut grid = Self::default();
+        for (zero_based_y, line) in s.lines().enumerate() {
+            for (zero_based_x, c) in line.char_indices() {
+                let point = Point::try_from((zero_based_x + 1, zero_based_y + 1))?;
+                let value = T::try_from(c)?;
+                grid.insert(point, value);
+            }
+        }
+        Ok(grid)
     }
 }
 
